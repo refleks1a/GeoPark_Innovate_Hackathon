@@ -1,0 +1,499 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+Signup Page
+{% endblock title %}
+
+{% block content %}
+<div>
+<a onclick="history.back()" style="position: relative; top: 51px; left: 215px;"><button type="button" class="btn btn-outline-warning">Back</button></a>
+<div class="container" style="display: block; text-align: center;">
+    <form method="post" class="login-form mt-5" style="width: 750px; display: inline-block; margin-left: auto; margin-right: auto; text-align: left;">
+      {% csrf_token %}
+      <div class="lq2-text-component lq2-text-center lq2-margin-bottom-sm" >
+        <h1 style="color: #ffbd00">Sign-up</h1>
+        <p style="color: #fcda7c">Enter the required data to signup.</p>
+      </div>
+
+      {{ form.email.errors }}
+      <div class="lq2-margin-bottom-sm">
+        <label class="lq2-form-label lq2-margin-bottom-3xs" for="input-username" style="color: #fcda7c">Username</label>
+        {{ form.username }}
+      </div>
+      <div class="lq2-margin-bottom-sm">
+        <label class="lq2-form-label lq2-margin-bottom-3xs" for="input-email" style="color: #fcda7c">Email</label>
+        {{ form.email }}
+      </div>
+
+      <div class="lq2-margin-bottom-sm">
+        <div class="lq2-flex lq2-justify-between lq2-margin-bottom-3xs">
+          <label class="lq2-form-label" for="input-password1" style="color: #fcda7c">Password</label>
+        </div>
+        {{ form.password1 }}
+      </div>
+
+      <div class="lq2-margin-bottom-sm">
+        <div class="lq2-flex lq2-justify-between lq2-margin-bottom-3xs">
+          <label class="lq2-form-label" for="input-password2" style="color: #fcda7c">Repeat password</label>
+        </div>
+        {{ form.password2 }}
+      </div>
+
+      <div class="lq2-margin-bottom-sm">
+        <button class="lq2-btn lq2-btn--primary lq2-btn--md lq2-width-100%" style="background: #ffbd00; font-weight: 700; font-size: 27.5px;"><input class="button" type="submit" value="">Sign-up</button>
+      </div>
+
+      <div class="lq2-text-center">
+        <p class="lq2-text-sm" style="color: #fcda7c">Already have an account? <a href="{% url 'custom_auth:login' %}" style="color: white">Log-in</a></p>
+      </div>
+
+    </form>
+</div>
+</div>
+
+<style>
+
+ /* --------------------------------
+
+File#: _1_login-form
+Title: Login Form
+Descr: Login form template
+Usage: codyhouse.co/license
+
+-------------------------------- */
+/* reset */
+*, *::after, *::before {
+  box-sizing: border-box;
+}
+
+* {
+  font: inherit;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+body {
+  background-color: hsl(0, 0%, 100%);
+  font-family: system-ui, sans-serif;
+  color: hsl(230, 7%, 23%);
+  font-size: 1rem;
+}
+
+h1, h2, h3, h4 {
+  line-height: 1.2;
+  color: white;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 2.0736rem;
+}
+
+h2 {
+  font-size: 1.728rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+h4 {
+  font-size: 1.2rem;
+}
+
+ol, ul, menu {
+  list-style: none;
+}
+
+button, input, textarea, select {
+  background-color: transparent;
+  border-radius: 0;
+  color: inherit;
+  line-height: inherit;
+  appearance: none;
+}
+
+textarea {
+  resize: vertical;
+  overflow: auto;
+  vertical-align: top;
+}
+
+a {
+  color: hsl(250, 84%, 54%);
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+img, video, svg {
+  display: block;
+  max-width: 100%;
+}
+
+@media (min-width: 64rem) {
+  body {
+    font-size: 1.25rem;
+  }
+
+  h1 {
+    font-size: 3.051rem;
+  }
+
+    h2 {
+    font-size: 2.44rem;
+  }
+
+    h3 {
+    font-size: 1.75rem;
+  }
+
+    h4 {
+    font-size: 1.5625rem;
+  }
+}
+
+/* variables */
+:root {
+  /* colors */
+  --lq2-color-primary-hsl: 250, 84%, 54%;
+  --lq2-color-bg-hsl: 0, 0%, 100%;
+  --lq2-color-contrast-high-hsl: 230, 7%, 23%;
+  --lq2-color-contrast-higher-hsl: 230, 13%, 9%;
+  --lq2-color-bg-dark-hsl: 240, 4%, 95%;
+  --lq2-color-white-hsl: 0, 0%, 100%;
+  --lq2-color-primary-darker-hsl: 250, 84%, 38%;
+  --lq2-color-primary-light-hsl: 250, 84%, 60%;
+  --lq2-color-bg-lighter-hsl: 0, 0%, 100%;
+  --lq2-color-black-hsl: 230, 13%, 9%;
+  --lq2-color-bg-light-hsl: 0, 0%, 100%;
+  --lq2-color-contrast-lower-hsl: 240, 4%, 85%;
+  --lq2-color-contrast-low-hsl: 240, 4%, 65%;
+  --lq2-color-accent-hsl: 342, 89%, 48%;
+
+  /* spacing */
+  --lq2-space-3xs: 0.25rem;
+  --lq2-space-xs: 0.5rem;
+  --lq2-space-sm: 0.75rem;
+  --lq2-space-2xs: 0.375rem;
+  --lq2-space-md: 1.25rem;
+
+  /* typography */
+  --lq2-text-sm: 0.833rem;
+  --lq2-text-sm: 0.833rem;
+}
+
+@media(min-width: 64rem){
+  :root {
+    /* spacing */
+    --lq2-space-3xs: 0.375rem;
+    --lq2-space-xs: 0.75rem;
+    --lq2-space-sm: 1.125rem;
+    --lq2-space-2xs: 0.5625rem;
+    --lq2-space-md: 2rem;
+
+    /* typography */
+    --lq2-text-sm: 1rem;
+    --lq2-text-sm: 1rem;
+  }
+}
+
+/* buttons */
+.lq2-btn {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1em;
+  white-space: nowrap;
+  text-decoration: none;
+  background: hsl(var(--lq2-color-bg-dark-hsl));
+  color: hsl(var(--lq2-color-contrast-higher-hsl));
+  cursor: pointer;
+  text-decoration: none;
+  line-height: 1.2;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: all 0.2s ease;
+  will-change: transform;
+  padding: var(--lq2-space-2xs) var(--lq2-space-sm);
+  border-radius: 0.25em;
+}
+
+.lq2-btn:focus-visible {
+  box-shadow: 0px 0px 0px 2px hsl(var(--lq2-color-bg-hsl)), 0px 0px 0px 4px hsla(var(--lq2-color-contrast-higher-hsl), 0.15);
+  outline: none;
+}
+
+.lq2-btn:active {
+  transform: translateY(2px);
+}
+
+.lq2-btn--primary {
+  background: hsl(var(--lq2-color-primary-hsl));
+  color: hsl(var(--lq2-color-white-hsl));
+  box-shadow: inset 0px 1px 0px hsla(var(--lq2-color-white-hsl), 0.15), 0px 1px 3px hsla(var(--lq2-color-primary-darker-hsl), 0.25), 0px 2px 6px hsla(var(--lq2-color-primary-darker-hsl), 0.1), 0px 6px 10px -2px hsla(var(--lq2-color-primary-darker-hsl), 0.25);
+}
+
+.lq2-btn--primary:hover {
+  background: hsl(var(--lq2-color-primary-light-hsl));
+  box-shadow: inset 0px 1px 0px hsla(var(--lq2-color-white-hsl), 0.15), 0px 1px 2px hsla(var(--lq2-color-primary-darker-hsl), 0.25), 0px 1px 4px hsla(var(--lq2-color-primary-darker-hsl), 0.1), 0px 3px 6px -2px hsla(var(--lq2-color-primary-darker-hsl), 0.25);
+}
+
+.lq2-btn--primary:focus {
+  box-shadow: inset 0px 1px 0px hsla(var(--lq2-color-white-hsl), 0.15), 0px 1px 2px hsla(var(--lq2-color-primary-darker-hsl), 0.25), 0px 1px 4px hsla(var(--lq2-color-primary-darker-hsl), 0.1), 0px 3px 6px -2px hsla(var(--lq2-color-primary-darker-hsl), 0.25), 0px 0px 0px 2px hsl(var(--lq2-color-bg-hsl)), 0px 0px 0px 4px hsl(var(--lq2-color-primary-hsl));
+}
+
+.lq2-btn--subtle {
+  background: hsl(var(--lq2-color-bg-lighter-hsl));
+  color: hsl(var(--lq2-color-contrast-higher-hsl));
+  box-shadow: inset 0px 1px 0px hsla(var(--lq2-color-white-hsl), 0.1), 0px 0px 0px 1px hsla(var(--lq2-color-black-hsl), 0.02), 0px 1px 3px -1px hsla(var(--lq2-color-black-hsl), 0.2), 0 0.3px 0.4px rgba(0, 0, 0, 0.025),0 0.9px 1.5px rgba(0, 0, 0, 0.05), 0 3.5px 6px rgba(0, 0, 0, 0.1);
+}
+
+.lq2-btn--subtle:hover {
+  background: hsl(var(--lq2-color-bg-light-hsl));
+  box-shadow: inset 0px 1px 0px hsla(var(--lq2-color-white-hsl), 0.1), 0px 0px 0px 1px hsla(var(--lq2-color-black-hsl), 0.02), 0px 1px 3px -1px hsla(var(--lq2-color-black-hsl), 0.2), 0 0.1px 0.3px rgba(0, 0, 0, 0.06),0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.lq2-btn--subtle:focus {
+  box-shadow: inset 0px 1px 0px hsla(var(--lq2-color-white-hsl), 0.1), 0px 0px 0px 1px hsla(var(--lq2-color-black-hsl), 0.02), 0px 1px 3px -1px hsla(var(--lq2-color-black-hsl), 0.2), 0 0.1px 0.3px rgba(0, 0, 0, 0.06),0 1px 2px rgba(0, 0, 0, 0.12), 0px 0px 0px 2px hsl(var(--lq2-color-bg-hsl)), 0px 0px 0px 4px hsl(var(--lq2-color-contrast-high-hsl));
+}
+
+.lq2-btn--md {
+  font-size: 1.2em;
+}
+
+/* form elements */
+.lq2-form-control {
+  font-size: 1em;
+  padding: var(--lq2-space-2xs) var(--lq2-space-xs);
+  background: hsl(var(--lq2-color-bg-dark-hsl));
+  line-height: 1.2;
+  box-shadow: inset 0px 0px 0px 1px hsl(var(--lq2-color-contrast-lower-hsl));
+  transition: all 0.2s ease;
+  border-radius: 0.25em;
+}
+
+.lq2-form-control::placeholder {
+  opacity: 1;
+  color: hsl(var(--lq2-color-contrast-low-hsl));
+}
+
+.lq2-form-control:focus, .lq2-form-control:focus-within {
+  background: hsl(var(--lq2-color-bg-hsl));
+  box-shadow: inset 0px 0px 0px 1px hsla(var(--lq2-color-contrast-lower-hsl), 0), 0px 0px 0px 2px hsl(var(--lq2-color-primary-hsl)), 0 0.3px 0.4px rgba(0, 0, 0, 0.025),0 0.9px 1.5px rgba(0, 0, 0, 0.05), 0 3.5px 6px rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+
+.lq2-form-label {
+  display: inline-block;
+  font-size: var(--lq2-text-sm);
+}
+
+/* icons */
+.lq2-icon {
+  height: var(--lq2-size, 1em);
+  width: var(--lq2-size, 1em);
+  display: inline-block;
+  color: inherit;
+  fill: currentColor;
+  line-height: 1;
+  flex-shrink: 0;
+  max-width: initial;
+}
+
+/* component */
+
+
+/* utility classes */
+.lq2-text-sm {
+  font-size: var(--lq2-text-sm);
+}
+
+.lq2-text-center {
+  text-align: center;
+}
+
+.lq2-width-100\% {
+  width: 100%;
+}
+
+.lq2-margin-bottom-sm {
+  margin-bottom: var(--lq2-space-sm);
+}
+
+.lq2-margin-bottom-3xs {
+  margin-bottom: var(--lq2-space-3xs);
+}
+
+.lq2-justify-between {
+  justify-content: space-between;
+}
+
+.lq2-flex {
+  display: flex;
+}
+
+.lq2-margin-y-sm {
+  margin-top: var(--lq2-space-sm);
+  margin-bottom: var(--lq2-space-sm);
+}
+
+.lq2-margin-right-3xs {
+  margin-right: var(--lq2-space-3xs);
+}
+
+.lq2-gap-xs {
+  gap: var(--lq2-space-xs);
+}
+
+.lq2-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.lq2-grid > * {
+  min-width: 0;
+  grid-column-end: span 12;
+}
+
+.lq2-text-component :where(h1, h2, h3, h4) {
+  line-height: var(--lq2-heading-line-height, 1.2);
+  margin-top: calc(var(--lq2-space-md) * var(--lq2-space-multiplier, 1));
+  margin-bottom: calc(var(--lq2-space-sm) * var(--lq2-space-multiplier, 1));
+}
+
+.lq2-text-component :where(p, blockquote, ul li, ol li) {
+  line-height: var(--lq2-body-line-height, 1.4);
+}
+
+.lq2-text-component :where(ul, ol, p, blockquote, .lq2-text-component__block) {
+  margin-bottom: calc(var(--lq2-space-sm) * var(--lq2-space-multiplier, 1));
+}
+
+.lq2-text-component :where(ul, ol) {
+  padding-left: 1.25em;
+}
+
+.lq2-text-component ul :where(ul, ol), .lq2-text-component ol :where(ul, ol) {
+  padding-left: 1em;
+  margin-bottom: 0;
+}
+
+.lq2-text-component ul {
+  list-style-type: disc;
+}
+
+.lq2-text-component ol {
+  list-style-type: decimal;
+}
+
+.lq2-text-component img {
+  display: block;
+  margin: 0 auto;
+}
+
+.lq2-text-component figcaption {
+  margin-top: calc(var(--lq2-space-xs) * var(--lq2-space-multiplier, 1));
+  font-size: var(--lq2-text-sm);
+  text-align: center;}
+
+.lq2-text-component em {
+  font-style: italic;
+}
+
+.lq2-text-component strong {
+  font-weight: bold;
+}
+
+.lq2-text-component s {
+  text-decoration: line-through;
+}
+
+.lq2-text-component u {
+  text-decoration: underline;
+}
+
+.lq2-text-component mark {
+  background-color: hsla(var(--lq2-color-accent-hsl), 0.2);
+  color: inherit;
+}
+
+.lq2-text-component blockquote {
+  padding-left: 1em;
+  border-left: 4px solid hsl(var(--lq2-color-contrast-lower-hsl));
+  font-style: italic;
+}
+
+.lq2-text-component hr {
+  margin: calc(var(--lq2-space-md) * var(--lq2-space-multiplier, 1)) auto;
+  background: hsl(var(--lq2-color-contrast-lower-hsl));
+  height: 1px;
+}
+
+.lq2-text-component > *:first-child {
+  margin-top: 0;
+}
+
+.lq2-text-component > *:last-child {
+  margin-bottom: 0;
+}
+
+.lq2-text-component.lq2-line-height-xs {
+  --lq2-heading-line-height: 1;
+  --lq2-body-line-height: 1.1;
+}
+
+.lq2-text-component.lq2-line-height-sm {
+  --lq2-heading-line-height: 1.1;
+  --lq2-body-line-height: 1.2;
+}
+
+.lq2-text-component.lq2-line-height-md {
+  --lq2-heading-line-height: 1.15;
+  --lq2-body-line-height: 1.4;
+}
+
+.lq2-text-component.lq2-line-height-lg {
+  --lq2-heading-line-height: 1.22;
+  --lq2-body-line-height: 1.58;
+}
+
+.lq2-text-component.lq2-line-height-xl {
+  --lq2-heading-line-height: 1.3;
+  --lq2-body-line-height: 1.72;
+}
+
+@media(min-width: 32rem){
+  .lq2-col-6\@xs {
+    grid-column-end: span 6;
+  }
+}
+
+#id_password1 {
+  width: 100%;
+  font-size: 1em;
+  padding: var(--lq2-space-2xs) var(--lq2-space-xs);
+  background: hsl(var(--lq2-color-bg-dark-hsl));
+  line-height: 1.2;
+  box-shadow: inset 0px 0px 0px 1px hsl(var(--lq2-color-contrast-lower-hsl));
+  transition: all 0.2s ease;
+  border-radius: 0.25em;
+}
+
+#id_password2 {
+  width: 100%;
+  font-size: 1em;
+  padding: var(--lq2-space-2xs) var(--lq2-space-xs);
+  background: hsl(var(--lq2-color-bg-dark-hsl));
+  line-height: 1.2;
+  box-shadow: inset 0px 0px 0px 1px hsl(var(--lq2-color-contrast-lower-hsl));
+  transition: all 0.2s ease;
+  border-radius: 0.25em;
+}
+</style>
+{% endblock content %}

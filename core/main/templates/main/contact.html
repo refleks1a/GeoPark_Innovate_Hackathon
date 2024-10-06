@@ -1,0 +1,293 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+Contact Page
+{% endblock title %}
+
+{% block content %}
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB3AbexgpNfC8Hulkqyao4cxC1sB8KxHFo&callback=console.debug&libraries=maps,marker&v=beta"></script>
+
+
+<section class="contact co1-position-relative co1-z-index-1">
+  <div class="co1-container co1-max-width-lg">
+    <a onclick="history.back()" style="position: relative; top: 52px; left: 7.5px;"><button type="button" class="btn btn-outline-warning">Back</button></a>
+    <div class="co1-margin-bottom-lg">
+      <h1 class="co1-text-center" style="color: #ffbd00">Contact Us</h1>
+    </div>
+
+    <div class="co1-grid co1-gap-y-lg co1-gap-lg@md">
+      <div class="co1-col-6@md">
+        <dl class="details-list details-list--rows">
+          <div class="details-list__item co1-padding-y-md co1-flex@md co1-justify-between@md">
+            <dt class="co1-font-bold co1-margin-bottom-2xs co1-margin-bottom-0@md" style="color: #ffbd00">Address</dt>
+            <dd class="co1-line-height-md co1-text-right@md" style="color: white">
+              Khatai, Hudu Memmedov 82 <br>AZ1123 <br>Baku, Azerbaijan
+            </dd>
+          </div>
+
+          <div class="details-list__item co1-padding-y-md co1-flex@md co1-justify-between@md">
+            <dt class="co1-font-bold co1-margin-bottom-2xs co1-margin-bottom-0@md" style="color: #ffbd00">Email</dt>
+            <dd>
+              <a href="mailto:webmaster@example.com" >kerimovaksin808@gmail.com</a>
+            </dd>
+          </div>
+
+          <div class="details-list__item co1-padding-y-md co1-flex@md co1-justify-between@md">
+            <dt class="co1-font-bold co1-margin-bottom-2xs co1-margin-bottom-0@md" style="color: #ffbd00">Phone</dt>
+            <dd class="co1-line-height-md co1-text-right@md">
+              <p style="color: white">+994 51 900 54 02</p>
+              <p class="co1-color-contrast-medium" style="color: white">Mon - Fri, 9AM - 5PM</p>
+            </dd>
+          </div>
+        </dl>
+      </div>
+      <div role="application" class="google-maps co1-radius-md co1-col-6@md co1-height-auto@md co1-padding-bottom-0@md js-google-maps" data-coordinates="51.5658015,-0.40339">
+        <gmp-map center="40.411354064941406,49.865718841552734" zoom="14" map-id="DEMO_MAP_ID">
+          <gmp-advanced-marker position="40.411354064941406,49.865718841552734" title="My location">
+          </gmp-advanced-marker>
+        </gmp-map>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  /* --------------------------------
+
+File#: _2_contact
+Title: Contact
+Descr: Contact block w/ info about how to get in touch
+Usage: codyhouse.co/license
+
+-------------------------------- */
+/* reset */
+*, *::after, *::before {
+  box-sizing: border-box;
+}
+
+* {
+  font: inherit;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+body {
+  background-color: hsl(0, 0%, 100%);
+  font-family: system-ui, sans-serif;
+  color: white;
+  font-size: 1rem;
+}
+
+h1, h2, h3, h4 {
+  line-height: 1.2;
+  color: white;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 2.0736rem;
+}
+
+h2 {
+  font-size: 1.728rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+h4 {
+  font-size: 1.2rem;
+}
+
+ol, ul, menu {
+  list-style: none;
+}
+
+button, input, textarea, select {
+  background-color: transparent;
+  border-radius: 0;
+  color: inherit;
+  line-height: inherit;
+  appearance: none;
+}
+
+textarea {
+  resize: vertical;
+  overflow: auto;
+  vertical-align: top;
+}
+
+a {
+  color: hsl(250, 84%, 54%);
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+img, video, svg {
+  display: block;
+  max-width: 100%;
+}
+
+@media (min-width: 32rem) {
+  body {
+    font-size: 1.25rem;
+  }
+
+  h1 {
+    font-size: 3.051rem;
+  }
+
+    h2 {
+    font-size: 2.44rem;
+  }
+
+    h3 {
+    font-size: 1.75rem;
+  }
+
+    h4 {
+    font-size: 1.5625rem;
+  }
+}
+
+/* variables */
+:root {
+  /* colors */
+  --co1-color-primary-hsl: 250, 84%, 54%;
+  --co1-color-bg-hsl: 0, 0%, 100%;
+  --co1-color-contrast-high-hsl: 230, 7%, 23%;
+  --co1-color-contrast-higher-hsl: 230, 13%, 9%;
+  --co1-color-contrast-medium-hsl: 225, 4%, 47%;
+
+  /* spacing */
+  --co1-space-2xs: 0.375rem;
+  --co1-space-md: 1.25rem;
+  --co1-space-lg: 2rem;
+}
+
+/* spacing */
+@media(min-width: 32rem){
+  :root {
+    --co1-space-2xs: 0.5625rem;
+    --co1-space-md: 2rem;
+    --co1-space-lg: 3.125rem;
+  }
+}
+
+/* component */
+@media (min-width: 32rem) {
+  .contact .google-maps {
+    height: auto;
+    padding-bottom: 0;
+  }
+}
+
+/* utility classes */
+.co1-radius-md {
+  border-radius: 0.25em;
+}
+
+.co1-color-contrast-medium {
+  --co1-color-o: 1;
+  color: hsla(var(--co1-color-contrast-medium-hsl), var(--co1-color-o, 1));
+}
+
+.co1-line-height-md {
+  line-height: 1.4;
+}
+
+.co1-margin-bottom-2xs {
+  margin-bottom: var(--co1-space-2xs);
+}
+
+.co1-font-bold {
+  font-weight: 700;
+}
+
+.co1-padding-y-md {
+  padding-top: var(--co1-space-md);
+  padding-bottom: var(--co1-space-md);
+}
+
+.co1-gap-y-lg {
+  row-gap: var(--co1-space-lg);
+}
+
+.co1-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.co1-grid > * {
+  min-width: 0;
+  grid-column-end: span 12;
+}
+
+.co1-text-center {
+  text-align: center;
+}
+
+.co1-margin-bottom-lg {
+  margin-bottom: var(--co1-space-lg);
+}
+
+.co1-max-width-lg {
+  max-width: 80rem;
+}
+
+.co1-container {
+  width: calc(100% - 2*var(--co1-space-md));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.co1-z-index-1 {
+  z-index: 1;
+}
+
+.co1-position-relative {
+  position: relative;
+}
+
+@media(min-width: 32rem){
+  .co1-padding-bottom-0\@md {
+    padding-bottom: 0;
+  }
+
+  .co1-height-auto\@md {
+    height: auto;
+  }
+
+  .co1-text-right\@md {
+    text-align: right;
+  }
+
+  .co1-margin-bottom-0\@md {
+    margin-bottom: 0;
+  }
+
+  .co1-justify-between\@md {
+    justify-content: space-between;
+  }
+
+  .co1-flex\@md {
+    display: flex;
+  }
+
+  .co1-gap-lg\@md {
+    gap: var(--co1-space-lg);
+  }
+
+  .co1-col-6\@md {
+    grid-column-end: span 6;
+  }
+}
+</style>
+{% endblock content %}

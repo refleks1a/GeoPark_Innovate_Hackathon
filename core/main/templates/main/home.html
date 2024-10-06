@@ -1,0 +1,434 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+Home Page
+{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+    <aside class="sidebar">
+        <div class="parks-container" id="parks-container">
+            <h3 class="nearby">Parks Nearby</n>
+            </h3>
+            {% for park_obj in parks %}
+                <div class="park-element">
+                    <a data-bs-toggle="collapse" href="#collapseExample{{park_obj.0.pk}}" role="button" aria-expanded="false" aria-controls="collapseExample" style="height: 160px;">
+                        <div class="park-container">
+                            <img src="{{park_obj.0.park_image_1.url}}" alt="{{park.name}}" class="park-photo">
+                            <div class="park-name">{{park_obj.0.name | slice:22}}...</div>
+                            <div class="park-rating"><p style="position: relative; right: 1px;">&#9733;{{park_obj.0.rating}}</p></div>
+                            <div hidden="True" class="park-lat">{{park_obj.0.lat}}</div>
+                            <div hidden="True" class="park-lng">{{park_obj.0.lng}}</div>
+                            <div hidden="True" class="park-pk">{{park_obj.0.pk}}</div>
+                        </div>
+                    </a>
+                    <button class="park-route">
+                        <div class="collapse mb-2" id="collapseExample{{park_obj.0.pk}}" >
+                            <div style="display: flex;">
+                                <div class="card card-body">
+                                    Start route
+                                </div>
+                                <div><a data-bs-toggle="modal" data-bs-target="#exampleModal{{park_obj.0.pk}}" class="btn btn-secondary" href="#">Details</a></div>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="modal fade" id="exampleModal{{park_obj.0.pk}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content" style="background: white">
+                            <div class="modal-header">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h3>Details</h3>
+                                <h4>{{ park_obj.0.name }}</h4>
+                                <p>{{ park_obj.0.description }}</p>
+                                <p>{{ park_obj.0.num_likes }} likes and {{ park_obj.0.num_comments }} comments</p>
+                                {% if park_obj.0.park_image_1 %}
+                                    <img style="width: 466px; height: 310px; padding: 10px;" src="{{park_obj.0.park_image_1.url}}" alt="">   
+                                {% endif %}  
+                                {% if park_obj.0.park_image_2 %}
+                                    <img style="width: 466px; height: 310px; padding: 10px;" src="{{park_obj.0.park_image_2.url}}" alt="">   
+                                {% endif %}  
+                                {% if park_obj.0.park_image_3 %}
+                                    <img style="width: 466px; height: 310px; padding: 10px;" src="{{park_obj.0.park_image_3.url}}" alt="">   
+                                {% endif %}    
+                                <a href="{% url 'parks:like' park_obj.0.pk %}" class="btn btn-warning my-2" style="color:#212529;font-size:1.25em; min-height: 30px"><i class="fas fa-thumbs-up"></i></a>
+                                <a href="{% url 'parks:delete-like' park_obj.0.pk %}" class="btn btn-warning my-2" style="color:#212529;font-size:1.25em; min-height: 30px"><i class="fas fa-thumbs-down"></i></a>
+                                <a href="{% url 'parks:comment' park_obj.0.pk %}" class="btn btn-warning my-2" style="color:#212529;font-size:1.25em; min-height: 30px">Comment</a>
+                            </div>
+                            <div class="modal-footer" style="align-content: start;">
+                                <ul style="position: relative; left: -280px">
+                                    {% for comment in park_obj.2 %}
+                                        <li>
+                                            <div class="col-lg-12">
+                                                <h6 class="mb-0" style="color:black">{{ comment.author }}</h6>
+                                                <h6 style="color:black">{{ comment.date_created }}</h6>
+                                                <small class="text-body-secondary" style="color:black">{{ comment.content }}</small>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </aside>
+    <main class="map-container">
+        <div class="search-bar-container">
+            <form method="get">
+                <div class="container search-bar" style="justify-content:center; display: flex;">
+                    <input type="text" id="form1" class="form-control" name="location" size="17" value="{{location_input}}" placeholder="Location" style="font-weight: 500"/>
+                    <button type="submit" id="form-submit" class="searchButton"><i class="fa fa-search"></i></button>
+                </div>
+            </form>
+        </div>
+        {% if search_res %}
+            <ul class="dropdown-menu position-static d-grid gap-1 p-2 rounded-3 mx-0 border-0 shadow w-120px"
+             data-bs-theme="dark" style="position: relative; bottom: 200px;">
+                {% for res in search_res %}
+                    <li><a class="dropdown-item rounded-2" id="searchResult{{res.pk}}">{{ res.name }}</a></li>
+                    <div class="res-lat" hidden="True">{{ res.lat }}</div>
+                    <div class="res-lng" hidden="True">{{ res.lng }}</div>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <div id="map"></div>
+        
+    </main>
+
+    <aside class="sidebar sidebar-restaurunts">
+        <h3 class="nearby" style="position: relative; top: 25px;">Restaurants</h3>
+        <button type="button" id="close" class="btn btn-warning">Clear Route</button>
+        <div class="restaurants-container" style="padding-top: 10px;"></div>
+    </aside>
+
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script>
+
+    var map;
+    let directionsRenderer;
+    let directionsService;
+    let restaurant_name = "";
+    let restaurantMarkers = []; 
+
+
+    function initMap() {
+        const location = { lat: 40.4093, lng: 49.8671 };
+        const myLocation = [location.lat, location.lng];
+        directionsService = new google.maps.DirectionsService();
+
+        map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 7,
+            center: location,
+            restriction: {
+                latLngBounds: {
+                    north: 42.2025,
+                    south: 37.3941,
+                    east: 50.2098,
+                    west: 44.3960
+                },
+                // strictBounds: true,
+            },
+        });
+
+        map.addListener('zoom_changed', () => {
+            const zoomLevel = map.getZoom();
+            if (zoomLevel < 14) {
+                hideRestaurantMarkers(); 
+            } else {
+                showRestaurantMarkers();    
+            }
+        });
+
+        const userMarker = new google.maps.Marker({
+            position: location,
+            map: map,
+            title: "You are here",
+            icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+        });
+    }
+
+    const parkElements = document.getElementsByClassName('park-element')
+
+    function initLocations() {
+        for (let i = 0; i < parkElements.length; i++) {            
+            const parkLat = parseFloat(document.getElementsByClassName('park-lat').item(i).innerHTML.replace(",", "."));
+            const parkLng = parseFloat(document.getElementsByClassName('park-lng').item(i).innerHTML.replace(",", "."));
+
+            const parkPk = document.getElementsByClassName('park-pk').item(i).innerHTML;
+            const parkName = document.getElementsByClassName('park-name').item(i).innerHTML;
+            
+            const parkImage = document.getElementsByClassName('park-photo').item(i);
+            parkImage.style.cursor = 'pointer';
+
+            if (parkPk <= 10) {
+                const marker = new google.maps.Marker({
+                position: { lat: parkLat, lng: parkLng },
+                map: map,
+                title: parkName,
+                icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+            });
+            }else {
+                const marker = new google.maps.Marker({
+                position: { lat: parkLat, lng: parkLng },
+                map: map,
+                title: parkName,
+                icon: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png",
+                });    
+            }
+            }            
+
+        parkImage.addEventListener('click', () => {
+            const restaurantContainer = document.getElementsByClassName('restaurants-container')[0];
+            restaurantContainer.innerHTML = ''; 
+
+            console.log(`Park Location: Latitude: ${parkLat}, Longitude: ${parkLng}`);
+            
+            const collapseElement = document.getElementById(`collapseExample${parkPk}`);
+            collapseElement.classList.toggle('show');
+            
+            map.setCenter({lat: parkLat, lng: parkLng});
+            map.setZoom(15);
+
+            fetchNearbyPlaces({ lat: parkLat, lng: parkLng });
+        });
+    }
+
+
+    function haversineDistance(coord1, coord2) {
+        const R = 6371;
+        const lat1 = coord1[0] * Math.PI / 180;
+        const lon1 = coord1[1] * Math.PI / 180;
+        const lat2 = coord2[0] * Math.PI / 180;
+        const lon2 = coord2[1] * Math.PI / 180;
+        const dLat = lat2 - lat1;
+        const dLon = lon2 - lon1;
+
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1) * Math.cos(lat2) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return R * c;
+    }   
+
+    const parkRoutes = document.getElementsByClassName('park-route');
+    for (let i = 0; i < parkRoutes.length; i++) {
+        const parkRoute = parkRoutes.item(i);
+        const parkLat = parseFloat(document.getElementsByClassName('park-lat').item(i).innerHTML.replace(",", "."));
+        const parkLng = parseFloat(document.getElementsByClassName('park-lng').item(i).innerHTML.replace(",", "."));
+
+        parkRoute.addEventListener('click', () => {
+            drawRoute({ lat: 40.4093, lng: 49.8671 }, {lat: parkLat, lng: parkLng} )
+        });
+    }
+
+    function drawRoute(start, end) {
+        if (directionsRenderer) {
+            directionsRenderer.setMap(null); // Clear previous routes
+        }
+        directionsRenderer = new google.maps.DirectionsRenderer({ suppressMarkers: true });
+        directionsRenderer.setMap(map);
+
+        const request = {
+            origin: start,
+            destination: end,
+            travelMode: google.maps.TravelMode.WALKING, // Changed to WALKING
+        };
+
+        directionsService.route(request, (result, status) => {
+            if (status === google.maps.DirectionsStatus.OK) {
+                directionsRenderer.setDirections(result);
+                const route = result.routes[0]; // Get the first route
+                const distance = route.legs[0].distance.text; // Extract distance
+                showDistance(distance); // Show distance
+                new google.maps.Marker({
+                    position: end,
+                    map: map,
+                    title: "Restaurant",
+                    icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+                });
+            } else {
+                console.error('Directions request failed due to ' + status);
+            }
+        });
+    }
+
+    function showDistance(distance) {
+        const distanceElement = document.getElementById("route-distance");
+        if (distanceElement) {
+            distanceElement.innerHTML = `<strong>Walking Distance from your location:</strong> ${distance}`; // Display distance
+        }
+    }
+
+    function fetchNearbyPlaces(location) {
+        const service = new google.maps.places.PlacesService(map);
+        const request = {
+            location: location,
+            radius: '2000', 
+            type: ['restaurant'], 
+        };
+
+        service.nearbySearch(request, processResults);
+    }
+
+    function processResults(results, status, pagination) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+            for (let i = 0; i < results.length; i++) {
+                createMarker(results[i]);
+                showall(results[i])
+            }
+
+            if (pagination && pagination.hasNextPage) {
+                setTimeout(() => {
+                    pagination.nextPage();  
+                }, 2000);  
+            }
+            } else {
+                console.error('Places request failed due to ' + status);
+            }
+    }
+
+    function createMarker(place) {
+        const marker = new google.maps.Marker({
+            position: place.geometry.location,
+            map: map,
+            title: place.name,
+        });
+
+        restaurantMarkers.push(marker);
+
+        google.maps.event.addListener(marker, 'click', () => {
+            drawRoute({ lat: 40.4093, lng: 49.8671 }, place.geometry.location); // Draw the walking route when clicking the marker
+            showRestaurantInfo(place);
+        });
+    }
+
+
+    function showall(place){
+        const container = document.getElementsByClassName("restaurants-container")[0];
+        const restaurantElement = document.createElement("div");
+        restaurantElement.className = "restaurant-item";
+
+        let r_name = place.name;
+        const address = place.vicinity || "Address not available";
+        const coordinates = `Coordinates: ${place.geometry.location.lat()}, ${place.geometry.location.lng()}`;
+        let photoHtml = '';
+        let ratingHtml = `<p><strong>Rating:</strong> ${place.rating ? place.rating + ' ⭐' : 'No rating available.'}</p>`;
+        if (place.photos && place.photos.length > 0) {
+            const photoUrl = place.photos[0].getUrl({ maxWidth: 300, maxHeight: 200 });
+            photoHtml = `<img src="${photoUrl}" alt="${name}" class="restaurant-photo">`;
+        }
+
+        restaurantElement.innerHTML = `
+            <strong>${name}</strong><br>
+            ${photoHtml}
+            <p>${address}</p>
+            <p>${coordinates}</p> <!-- Display the coordinates -->
+            ${ratingHtml}
+            <p id="route-distance"></p> <!-- Placeholder for distance -->
+        `;
+
+        container.appendChild(restaurantElement); 
+
+    }
+
+
+    function showRestaurantInfo(place) {
+        const container = document.getElementsByClassName("restaurants-container")[0];
+        container.innerHTML = ''; // Clear the previous restaurant info
+        const restaurantElement = document.createElement("div");
+        restaurantElement.className = "restaurant-item";
+
+        const name = place.name;
+        restaurant_name = name; 
+        const address = place.vicinity || "Address not available";
+        const coordinates = `Coordinates: ${place.geometry.location.lat()}, ${place.geometry.location.lng()}`;
+        let photoHtml = '';
+        let ratingHtml = `<p><strong>Rating:</strong> ${place.rating ? place.rating + ' ⭐' : 'No rating available.'}</p>`;
+
+        if (place.photos && place.photos.length > 0) {
+            const photoUrl = place.photos[0].getUrl({ maxWidth: 300, maxHeight: 200 });
+            photoHtml = `<img src="${photoUrl}" alt="${name}" class="restaurant-photo">`;
+        }
+
+        restaurantElement.innerHTML = `
+            <strong>${name}</strong><br>
+            ${photoHtml}
+            <p>${address}</p>
+            <p>${coordinates}</p> <!-- Display the coordinates -->
+            ${ratingHtml}
+            <p id="route-distance"></p> <!-- Placeholder for distance -->
+        `;
+
+        container.appendChild(restaurantElement); // Append the new restaurant info to the container
+    }
+
+    document.getElementById("close").addEventListener("click", () => {
+        const container = document.getElementsByClassName("restaurants-container")[0];
+        container.innerHTML = ''; 
+        fetchNearbyPlaces({lat: parseFloat(40.4093),
+            lng: parseFloat(49.8671)})
+        directionsRenderer.setMap(null);    
+    })
+    
+    const searchResults = document.getElementsByClassName("dropdown-item")
+    for (let i = 0; i < searchResults.length; i++) {
+        const searchResult = searchResults[i]
+        const searchLat = parseFloat(document.getElementsByClassName('res-lat').item(i).innerHTML.replace(",", "."));
+        const searchLng = parseFloat(document.getElementsByClassName('res-lng').item(i).innerHTML.replace(",", "."));
+
+        searchResult.addEventListener("click", () => {
+            zoom(searchLat, searchLng)
+            zoom(searchLat, searchLng)
+            fetchNearbyPlaces({lat: parseFloat(searchLat), lng: parseFloat(searchLng)})
+
+        })
+    }
+    function zoom(lat, lng){
+        map.setCenter({lat:lat, lng: lng});
+        map.setZoom(15);
+    }
+
+
+    window.addEventListener("load", (event) => {
+        initMap();
+        fetchNearbyPlaces({lat: 40.4093, lng: 49.8671});
+
+        initLocations();
+        initLocations();        
+    });
+
+    function findnearest(park_loc){
+        fetchNearbyPlaces(park_loc);
+    }
+
+    function hideRestaurantMarkers() {
+        restaurantMarkers.forEach(marker => {
+            marker.setMap(null); // Remove marker from the map
+        });
+    }
+
+    function showRestaurantMarkers() {
+        restaurantMarkers.forEach(marker => {
+            marker.setMap(map); // Add marker back to the map
+        });
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2dgH3W8J1vrVWxXo2OQw6KtB9eH4rKdU&libraries=places&language=en">
+</script>
+{% endblock content %}
